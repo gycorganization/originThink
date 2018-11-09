@@ -45,6 +45,10 @@ Route::group('admin', [
     'deleteMenu$'=>'admin/System/deleteMenu',                                //删除菜单
     'config'=>'admin/System/config',                                         //系统配置
     'siteConfig'=>'admin/System/siteConfig',                                 //站点配置
+
+    //文章管理
+    'blog'=>'admin/Blog/index',
+    'addBlog'=>'admin/Blog/add',
 ])->middleware(app\admin\middleware\Auth::class)->ext('html');               //使用中间件验证
 /**
  * swoole服务
@@ -57,6 +61,6 @@ Route::get('captcha',function (){
  * miss路由
  * 没有定义的路由全部使用该路由
  */
-Route::miss('admin/Login/login');
+//Route::miss('admin/Login/login');
 return [
 ];
