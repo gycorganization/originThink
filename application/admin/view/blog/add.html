@@ -14,21 +14,13 @@
                                 <div class="layui-col-md3">
                                     <label class="layui-form-label">所在专栏</label>
                                     <div class="layui-input-block">
-                                        <select name="type"  datatype="*" nullmsg="请选择专栏！">
-                                            <option></option>
-                                            <option value="0">提问</option>
-                                            <option value="1">分享</option>
-                                            <option value="2">讨论</option>
-                                            <option value="3">建议</option>
-                                            <option value="4">公告</option>
-                                            <option value="5">动态</option>
-                                        </select>
+                                        {form:select name="class_id" list="$class_list" value="$data['class_id']"}
                                     </div>
                                 </div>
                                 <div class="layui-col-md9">
                                     <label for="L_title" class="layui-form-label">标题</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="L_title" name="title" required  autocomplete="off" class="layui-input"  datatype="*" nullmsg="请输入标题！">
+                                        <input type="text" id="L_title" name="title" required  autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                             </div>
@@ -36,17 +28,17 @@
                                 <div class="layui-col-md12">
                                     <label for="L_title" class="layui-form-label">简介</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="desc" name="desc" autocomplete="off" class="layui-input"  datatype="*" nullmsg="请输入简介！">
+                                        <input type="text" id="desc" name="desc" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
                             </div>
                             <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
-                                    <textarea id="L_content" name="content"  placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;"  datatype="*" nullmsg="请输入内容！"></textarea>
+                                    <textarea id="L_content" name="content"  placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;" ></textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <button class="layui-btn" >立即发布</button>
+                                <button class="layui-btn ispost" >立即发布</button>
                             </div>
                         </form>
                     </div>
@@ -60,8 +52,9 @@
 {js href="/js/jquery.min.js" /}
 {js href="/js/Validform_v5.3.2_min.js" /}
 <script>
-    layui.use('layedit', function(){
+    layui.use(['layedit','form'], function(){
         var layedit = layui.layedit;
+        var form = layui.form;
         layedit.build('L_content', {
             tool: [
                 'strong' //加粗
@@ -80,25 +73,25 @@
         }); //建立编辑器
     });
 
-    $("#form").Validform({
-        ajaxPost:true,
-        tiptype:function (msg,o,cssctl) {
-            if(o.type==3 && msg!='所填信息没有经过验证，请稍后…'){
-                layer.msg(msg, {time: 1500});//验证错误的提示
-            }
-        },
-        callback:function(data){     //ajax提交后的返回调用方法（相当于ajax里面的success那个方法）
-            layer.msg(data.msg, {time: 1500}, function () {   //提示的插件，可以使用alert代替
-                if (data.code) {
-                    setTimeout(function () {
-                        //刷新父页面
-                        parent.location.reload();
-                    }, 500);
-                }else{
-                    $('#token').val(data.data.token);
-                }
-            });
-        }
-    });
+//    $("#form").Validform({
+//        ajaxPost:true,
+//        tiptype:function (msg,o,cssctl) {
+//            if(o.type==3 && msg!='所填信息没有经过验证，请稍后…'){
+//                layer.msg(msg, {time: 1500});//验证错误的提示
+//            }
+//        },
+//        callback:function(data){     //ajax提交后的返回调用方法（相当于ajax里面的success那个方法）
+//            layer.msg(data.msg, {time: 1500}, function () {   //提示的插件，可以使用alert代替
+//                if (data.code) {
+//                    setTimeout(function () {
+//                        //刷新父页面
+//                        parent.location.reload();
+//                    }, 500);
+//                }else{
+//                    $('#token').val(data.data.token);
+//                }
+//            });
+//        }
+//    });
 </script>
 {/block}

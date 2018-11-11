@@ -1,208 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Document</title>
-  <link rel="stylesheet" type="text/css" href="/layui/css/layui.css">
-  <link rel="stylesheet" type="text/css" href="/css/main.css">
-<!--加载meta IE兼容文件-->
-<!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-<![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; Charset=gb2312">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>原点的个人博客</title>
+    <link rel="shortcut icon" href="../images/Logo_40.png" type="image/x-icon">
+    <!--Layui-->
+    <link href="/layui/css/layui.css" rel="stylesheet" />
+    <!--font-awesome-->
+    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!--全局样式表-->
+    <link href="/css/index/global.css" rel="stylesheet" />
+    <!-- 本页样式表 -->
+    <link href="/css/index/home.css" rel="stylesheet" />
 </head>
 <body>
-  <div class="header">
-    <div class="menu-btn">
-      <div class="menu"></div>
+    <!-- 导航 -->
+    <nav class="blog-nav layui-header">
+        <div class="blog-container">
+            <!-- QQ互联登陆 -->
+            <a href="javascript:;" class="blog-user">
+                <i class="fa fa-qq"></i>
+            </a>
+            <a href="javascript:;" class="blog-user layui-hide">
+                <img src="../images/Absolutely.jpg" alt="Absolutely" title="Absolutely" />
+            </a>
+            <a class="blog-logo" href="index.html">原点的个人博客</a>
+            <!-- 导航菜单 -->
+            <ul class="layui-nav" lay-filter="nav">
+                <li class="layui-nav-item layui-this">
+                    <a href="/"><i class="fa fa-home fa-fw"></i>&nbsp;网站首页</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="{:url('/index/index/article')}"><i class="fa fa-file-text fa-fw"></i>&nbsp;文章专栏</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="resource.html"><i class="fa fa-tags fa-fw"></i>&nbsp;资源分享</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="timeline.html"><i class="fa fa-hourglass-half fa-fw"></i>&nbsp;点点滴滴</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="about.html"><i class="fa fa-info fa-fw"></i>&nbsp;关于本站</a>
+                </li>
+            </ul>
+            <!-- 手机和平板的导航开关 -->
+            <a class="blog-navicon" href="javascript:;">
+                <i class="fa fa-navicon"></i>
+            </a>
+        </div>
+    </nav>
+    <!-- 主体（一般只改变这里的内容） -->
+    <div class="blog-body">
+        <!-- canvas -->
+        <canvas id="canvas-banner" style="background: #393D49;"></canvas>
+        <!--为了及时效果需要立即设置canvas宽高，否则就在home.js中设置-->
+        <script type="text/javascript">
+            var canvas = document.getElementById('canvas-banner');
+            canvas.width = window.document.body.clientWidth - 10;//减去滚动条的宽度
+            if (screen.width >= 992) {
+                canvas.height = window.innerHeight * 1 / 3;
+            } else {
+                canvas.height = window.innerHeight * 2 / 7;
+            }
+        </script>
+        <!-- 这个一般才是真正的主体内容 -->
+        <div class="blog-container">
+            <div class="blog-main">
+                <!-- 网站公告提示 -->
+                <!--<div class="home-tips shadow">-->
+                    <!--<i style="float:left;line-height:17px;" class="fa fa-volume-up"></i>-->
+                    <!--<div class="home-tips-container">-->
+                        <!--<span style="color: #009688">偷偷告诉大家，本博客的后台管理也正在制作，为大家准备了游客专用账号！</span>-->
+                        <!--<span style="color: red">网站新增留言回复啦！使用QQ登陆即可回复，人人都可以回复！</span>-->
+                        <!--<span style="color: red">如果你觉得网站做得还不错，来Fly社区点个赞吧！<a href="http://fly.layui.com/case/2017/" target="_blank" style="color:#01AAED">点我前往</a></span>-->
+                        <!--<span style="color: #009688">不落阁 &nbsp;—— &nbsp;一个.NET程序员的个人博客，新版网站采用Layui为前端框架，目前正在建设中！</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--左边文章列表-->
+                <div class="blog-main-left">
+                    {volist name='list' id='vo'}
+                        <div class="article shadow">
+                            <div class="article-left">
+                                <img src="/images/wy_img1.jpg" alt="基于laypage的layui扩展模块（pagesize.js）！" />
+                            </div>
+                            <div class="article-right">
+                                <div class="article-title">
+                                    <a href="{:url('/index/index/detail',['id'=>$vo.id])}">{$vo.title}</a>
+                                </div>
+                                <div class="article-abstract">
+                                    {$vo.desc}
+                                 </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="article-footer">
+                                <span><i class="fa fa-clock-o"></i>&nbsp;&nbsp;{$vo.update_time}</span>
+                                <!--<span class="article-author"><i class="fa fa-user"></i>&nbsp;&nbsp;原点</span>-->
+                                <span><i class="fa fa-tag"></i>&nbsp;&nbsp;<a href="#">Web前端</a></span>
+                                <span class="article-viewinfo"><i class="fa fa-eye"></i>&nbsp;{$vo.views}</span>
+                                <span class="article-viewinfo"><i class="fa fa-commenting"></i>&nbsp;{$vo.comments}</span>
+                            </div>
+                        </div>
+                    {/volist}
+                </div>
+
+                <!--右边小栏目-->
+                <div class="blog-main-right">
+                    <div class="blogerinfo shadow">
+                        <!--<div class="blogerinfo-figure">-->
+                            <!--<img src="../images/Absolutely.jpg" alt="Absolutely" />-->
+                        <!--</div>-->
+                        <p class="blogerinfo-nickname">原点</p>
+                        <p class="blogerinfo-introduce">一枚90后程序员，.PHP开发工程师</p>
+                        <p class="blogerinfo-location"><i class="fa fa-location-arrow"></i>&nbsp;江苏 - 宿迁</p>
+                        <hr />
+                        <div class="blogerinfo-contact">
+                            <a target="_blank" title="QQ交流" href="javascript:layer.msg('启动QQ会话窗口')"><i class="fa fa-qq fa-2x"></i></a>
+                            <a target="_blank" title="给我写信" href="javascript:layer.msg('启动邮我窗口')"><i class="fa fa-envelope fa-2x"></i></a>
+                            <a target="_blank" title="新浪微博" href="javascript:layer.msg('转到你的微博主页')"><i class="fa fa-weibo fa-2x"></i></a>
+                            <a target="_blank" title="码云" href="javascript:layer.msg('转到你的github主页')"><i class="fa fa-git fa-2x"></i></a>
+                        </div>
+                    </div>
+                    <div></div><!--占位-->
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">热文排行</div>
+                        <ul class="fa-ul blog-module-ul">
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">Web安全之跨站请求伪造CSRF</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">ASP.NET MVC 防范跨站请求伪造（CSRF）</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">常用正则表达式</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">EF CodeFirst数据迁移常用指令</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">浅谈.NET Framework基元类型</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">C#基础知识回顾-扩展方法</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">一步步制作时光轴（一）（HTML篇）</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="detail.html">一步步制作时光轴（二）（CSS篇）</a></li>
+                        </ul>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">最近分享</div>
+                        <ul class="fa-ul blog-module-ul">
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="http://pan.baidu.com/s/1c1BJ6Qc" target="_blank">Canvas</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="http://pan.baidu.com/s/1kVK8UhT" target="_blank">pagesize.js</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="https://pan.baidu.com/s/1mit2aiW" target="_blank">时光轴</a></li>
+                            <li><i class="fa-li fa fa-hand-o-right"></i><a href="https://pan.baidu.com/s/1nuAKF81" target="_blank">图片轮播</a></li>
+                        </ul>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">一路走来</div>
+                        <dl class="footprint">
+                            <dt>2017年03月12日</dt>
+                            <dd>新增留言回复功能！人人都可参与回复！</dd>
+                            <dt>2017年03月10日</dt>
+                            <dd>不落阁2.0基本功能完成，正式上线！</dd>
+                            <dt>2017年03月09日</dt>
+                            <dd>新增文章搜索功能！</dd>
+                            <dt>2017年02月25日</dt>
+                            <dd>QQ互联接入网站，可QQ登陆发表评论与留言！</dd>
+                        </dl>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">后台记录</div>
+                        <dl class="footprint">
+                            <dt>2017年03月16日</dt>
+                            <dd>分页新增页容量控制</dd>
+                            <dt>2017年03月12日</dt>
+                            <dd>新增管家提醒功能</dd>
+                            <dt>2017年03月10日</dt>
+                            <dd>新增Win10快捷菜单</dd>
+                        </dl>
+                    </div>
+                    <div class="blog-module shadow">
+                        <div class="blog-module-title">友情链接</div>
+                        <ul class="blogroll">
+                            <li><a target="_blank" href="http://www.layui.com/" title="Layui">Layui</a></li>
+                            <li><a target="_blank" href="http://www.pagemark.cn/" title="页签">页签</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
     </div>
-    <h1 class="logo">
-      <a href="index.html">
-        <span>MYBLOG</span>
-        <img src="/images/logo.png">
-      </a>
-    </h1>
-    <div class="nav">
-      <a href="index.html" class="active">文章</a>
-      <a href="whisper.html">微语</a>
-      <a href="leacots.html">留言</a>
-      <a href="album.html">相册</a>
-      <a href="about.html">关于</a>
-    </div>
-    <ul class="layui-nav header-down-nav">
-      <li class="layui-nav-item"><a href="index.html" class="active">文章</a></li>
-      <li class="layui-nav-item"><a href="whisper.html">微语</a></li>
-      <li class="layui-nav-item"><a href="leacots.html">留言</a></li>
-      <li class="layui-nav-item"><a href="album.html">相册</a></li>
-      <li class="layui-nav-item"><a href="about.html">关于</a></li>
+    <!-- 底部 -->
+    <footer class="blog-footer">
+        <p><span>Copyright</span><span>&copy;</span><span>2018</span><span>Design By 原点</span></p>
+        <p><a href="http://www.miibeian.gov.cn/" target="_blank">苏ICP备17056337号</a></p>
+    </footer>
+    <!--侧边导航-->
+    <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
+        <li class="layui-nav-item layui-this">
+            <a href="index.html"><i class="fa fa-home fa-fw"></i>&nbsp;网站首页</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="article.html"><i class="fa fa-file-text fa-fw"></i>&nbsp;文章专栏</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="resource.html"><i class="fa fa-tags fa-fw"></i>&nbsp;资源分享</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="timeline.html"><i class="fa fa-road fa-fw"></i>&nbsp;点点滴滴</a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="about.html"><i class="fa fa-info fa-fw"></i>&nbsp;关于本站</a>
+        </li>
     </ul>
-    <p class="welcome-text">
-      欢迎来到<span class="name">原点</span>的博客~
-    </p>
-  </div>
-
-  <div class="banner">
-    <div class="cont w1000">
-      <div class="title">
-        <h3>MY<br />BLOG</h3>
-        <h4>well-balanced heart</h4>
-      </div>
-      <div class="amount">
-        <p><span class="text">访问量</span><span class="access">1000</span></p>
-        <p><span class="text">日志</span><span class="daily-record">1000</span></p>
-      </div>
+    <!--分享窗体-->
+    <div class="blog-share layui-hide">
+        <div class="blog-share-body">
+            <div style="width: 200px;height:100%;">
+                <div class="bdsharebuttonbox">
+                    <a class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+                    <a class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+                    <a class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+                    <a class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+    <!--遮罩-->
+    <div class="blog-mask animated layui-hide"></div>
+    <!-- layui.js -->
+    <script src="/layui/layui.js"></script>
+    <!-- 全局脚本 -->
+    <script src="/js/index/global.js"></script>
+    <!-- 本页脚本 -->
+    <script src="/js/index/home.js"></script>
 
-  <div class="content">
-    <div class="cont w1000">
-      <div class="title">
-        <span class="layui-breadcrumb" lay-separator="|">
-          <a href="javascript:;" class="active">设计文章</a>
-          <a href="javascript:;">前端文章</a>
-          <a href="javascript:;">旅游杂记</a>
-        </span>
-      </div>
-      <div class="list-item">
-        {volist name='list' id='vo'}
-          <div class="item">
-          <div class="layui-fluid">
-            <div class="layui-row">
-              <!--<div class="layui-col-xs12 layui-col-sm4 layui-col-md5">-->
-                <!--<div class="img"><img src="{$vo.img}" alt=""></div>-->
-              <!--</div>-->
-              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
-                <div class="item-cont">
-                  <h3>{$vo.title}<span class="layui-btn layui-btn-danger new-icon">new</span></h3>
-                  <p class="cont-info"><span class="data">{$vo.update_time|date="Y-m-d h:i:s"}</span>&nbsp;<span class="types">{$vo.type}</span></p>
-                  <p>{$vo.desc}</p>
-                  <a href="details.html" class="go-icon"></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/volist}
-
-        <div class="item">
-          <div class="layui-fluid">
-            <div class="layui-row">
-              <div class="layui-col-xs12 layui-col-sm4 layui-col-md5">
-                <div class="img"><img src="/images/sy_img1.jpg" alt=""></div>
-              </div>
-              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
-                <div class="item-cont">
-                  <h3>空间立体效果图，完美呈现最终效果<button class="layui-btn layui-btn-danger new-icon">new</button></h3>
-                  <h5>设计文章</h5>
-                  <p>室内设计作为一门新兴的学科，尽管还只是近数十年的事，但是人们有意识地对自己生活、生产活动的室内进行安排布置，甚至美化装饰，赋予室内环境以所祈使的气氛，却早巳从人类文明伊始的时期就已存在</p>
-                  <a href="details.html" class="go-icon"></a>
-                </div>
-            </div>
-            </div>
-           </div>
-        </div>
-        <div class="item">
-          <div class="layui-fluid">
-            <div class="layui-row">
-              <div class="layui-col-xs12 layui-col-sm4 layui-col-md5">
-                <div class="img"><img src="/images/sy_img2.jpg" alt=""></div>
-              </div>
-              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
-                <div class="item-cont">
-                  <h3>空间立体效果图，完美呈现最终效果<button class="layui-btn layui-btn-danger new-icon">new</button></h3>
-                  <h5>设计文章</h5>
-                  <p>室内设计作为一门新兴的学科，尽管还只是近数十年的事，但是人们有意识地对自己生活、生产活动的室内进行安排布置，甚至美化装饰，赋予室内环境以所祈使的气氛，却早巳从人类文明伊始的时期就已存在</p>
-                  <a href="details.html" class="go-icon"></a>
-                </div>
-            </div>
-            </div>
-           </div>
-        </div>
-        <div class="item">
-          <div class="layui-fluid">
-            <div class="layui-row">
-              <div class="layui-col-xs12 layui-col-sm4 layui-col-md5">
-                <div class="img"><img src="/images/sy_img3.jpg" alt=""></div>
-              </div>
-              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
-                <div class="item-cont">
-                  <h3>空间立体效果图，完美呈现最终效果<button class="layui-btn layui-btn-danger new-icon">new</button></h3>
-                  <h5>设计文章</h5>
-                  <p>室内设计作为一门新兴的学科，尽管还只是近数十年的事，但是人们有意识地对自己生活、生产活动的室内进行安排布置，甚至美化装饰，赋予室内环境以所祈使的气氛，却早巳从人类文明伊始的时期就已存在</p>
-                  <a href="details.html" class="go-icon"></a>
-                </div>
-            </div>
-            </div>
-           </div>
-        </div>
-        <div class="item">
-          <div class="layui-fluid">
-            <div class="layui-row">
-              <div class="layui-col-xs12 layui-col-sm4 layui-col-md5">
-                <div class="img"><img src="/images/sy_img4.jpg" alt=""></div>
-              </div>
-              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
-                <div class="item-cont">
-                  <h3>空间立体效果图，完美呈现最终效果<button class="layui-btn layui-btn-danger new-icon">new</button></h3>
-                  <h5>设计文章</h5>
-                  <p>室内设计作为一门新兴的学科，尽管还只是近数十年的事，但是人们有意识地对自己生活、生产活动的室内进行安排布置，甚至美化装饰，赋予室内环境以所祈使的气氛，却早巳从人类文明伊始的时期就已存在</p>
-                  <a href="details.html" class="go-icon"></a>
-                </div>
-            </div>
-            </div>
-           </div>
-        </div>
-        <div class="item">
-          <div class="layui-fluid">
-            <div class="layui-row">
-              <div class="layui-col-xs12 layui-col-sm4 layui-col-md5">
-                <div class="img"><img src="/images/sy_img5.jpg" alt=""></div>
-              </div>
-              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
-                <div class="item-cont">
-                  <h3>空间立体效果图，完美呈现最终效果<button class="layui-btn layui-btn-danger new-icon">new</button></h3>
-                  <h5>设计文章</h5>
-                  <p>室内设计作为一门新兴的学科，尽管还只是近数十年的事，但是人们有意识地对自己生活、生产活动的室内进行安排布置，甚至美化装饰，赋予室内环境以所祈使的气氛，却早巳从人类文明伊始的时期就已存在</p>
-                  <a href="details.html" class="go-icon"></a>
-                </div>
-            </div>
-            </div>
-           </div>
-        </div>
-      </div>
-      <div id="demo" style="text-align: center;"></div>
-    </div>
-  </div>
-
-  <div class="footer-wrap">
-    <div class="footer w1000">
-      <div class="qrcode">
-        <img src="/images/erweima.jpg">
-      </div>
-      <div class="practice-mode">
-        <img src="/images/down_img.jpg">
-        <div class="text">
-          <h4 class="title">我的联系方式</h4>
-          <p>微信<span class="WeChat">1234567890</span></p>
-          <p>手机<span class="iphone">1234567890</span></p>
-          <p>邮箱<span class="email">1234567890@qq.com</span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script type="text/javascript" src="/layui/layui.js"></script>
-  <script type="text/javascript">
-    layui.config({
-      base: '/js/util/'
-    }).use(['element','laypage','jquery','menu'],function(){
-      element = layui.element,laypage = layui.laypage,$ = layui.$,menu = layui.menu;
-      laypage.render({
-        elem: 'demo'
-        ,count: 70 //数据总数，从服务端得到
-      });
-      menu.init();
-    })
-  </script>
 </body>
 </html>

@@ -9,6 +9,8 @@
 namespace app\admin\controller;
 
 
+use app\admin\model\Article;
+
 class Blog extends Common
 {
     public function index()
@@ -22,7 +24,7 @@ class Blog extends Common
                     $map[]=['create_time', 'between time', [$data['starttime'], $data['endtime']]];
                 }
             }
-            empty($data['title']) || $map[]=['title','like','%'.$data['key'].'%'];
+            empty($data['title']) || $map[]=['title','like','%'.$data['title'].'%'];
             isset($data['limit'])?$limit=$data['limit'] : $limit=10;
             $list=db('article')->where($map)->withAttr('create_time', function($value, $data) {
                 return date('Y-m-d H:i:s',$value);
@@ -37,24 +39,27 @@ class Blog extends Common
     public function add()
     {
         if(request()->isPost()){
+            $Article= new Article();
             $title=input('post.title');
             $des=input('post.desc');
             $type=input('post.type');
             $content=input('post.content');
-            $data=[
-                'title'=>$title,
-                'desc'=>$des,
-                'type'=>$type,
-                'content'=>$content,
-            ];
-            $res=db('article')->insert($data);
+            $Article= new Article();
+            $Article->title=$title;
+            $Article->desc=$des;
+            $Article->type=$type;
+            $Article->content=$content;
+            $res=$Article->save();
             if($res){
-                $msg=['code'=>1,'msg'=>'添加成功'];
+                $this->success('添加成功',url('/admin/blog'));
             }else{
+                $this->error('添加失败');
                 $msg=['code'=>0,'msg'=>'添加失败'];
             }
             return $msg;
         }else{
+            $class_list=db('article_class')->column('id,class_name');
+            $this->assign('class_list',$class_list);
             return $this->fetch();
         }
 

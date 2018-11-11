@@ -2,18 +2,45 @@
 namespace app\index\controller;
 
 use think\Controller;
-use think\swoole\facade\Task;
-use think\swoole\facade\Timer;
+use app\index\model\Article;
 class Index extends Controller
 {
     public function index()
     {
-        $list=db('article')->select();
+        $list=Article::order('id desc')->limit(10)->select();
         $this->assign('list',$list);
         return $this->fetch();
-        return '<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} a{color:#2E5CD5;cursor: pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family: "Century Gothic","Microsoft yahei"; color: #333;font-size:18px;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.6em; font-size: 42px }</style><div style="padding: 24px 48px;"> <h1>:) </h1><p> ThinkPHP V5.1<br/><span style="font-size:30px">12载初心不改（2006-2018） - 你值得信赖的PHP框架</span></p></div><script type="text/javascript" src="https://tajs.qq.com/stats?sId=64890268" charset="UTF-8"></script><script type="text/javascript" src="https://e.topthink.com/Public/static/client.js"></script><think id="eab4b9f840753f8e7"></think>';
     }
 
+    public function detail()
+    {
+        $article_id=input('id',0,'intval');
+        if(!$article_id) return $this->error('参数错误');
+        $data=Article::get($article_id);
+        $data->views=['inc', 1];
+        $data->save();
+        $data=Article::get($article_id);
+        $this->assign('data',$data);
+        $class_list=db('article_class')->column('id,class_name');
+        $this->assign('class_list',$class_list);
+        return $this->fetch();
+    }
+
+    public function article()
+    {
+        $keywords=input('keywords','','trim');
+        $class_id=input('class_id',0,'intval');
+        $where=[];
+        empty($keywords) || $where[]=['title','like','%'.$keywords.'%'];
+        empty($class_id) || $where[]=['class_id','=',$class_id];
+        $list=Article::where($where)->order('id desc')->paginate(10,false,['query'=>input()]);
+        $count=$list->total();
+        $this->assign('count',$count);
+        $this->assign('list',$list);
+        $class_list=db('article_class')->column('id,class_name');
+        $this->assign('class_list',$class_list);
+        return $this->fetch();
+    }
     public function index2()
     {
         Task::async(function ($serv, $task_id, $data) {
