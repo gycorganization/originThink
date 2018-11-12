@@ -68,6 +68,7 @@
                 ,'code' //代码
             ]
         }); //建立编辑器
+        //表单验证
         form.verify({
             content: function (value) {
                 value = $.trim(layedit.getText(index));
@@ -75,9 +76,9 @@
                 layedit.sync(index);
             }
         });
+        //表单提交
         form.on('submit(*)', function(data){
-            console.log(data.field)
-            data.field.content=layedit.getContent(index)
+            // console.log(data.field)
             $.post("{:url('/admin/addBlog')}",data.field,function (msg) {
                 layer.msg(msg.msg, {time: 1500}, function () {   //提示的插件，可以使用alert代替
                if (msg.code) {
