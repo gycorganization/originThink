@@ -39,24 +39,18 @@ class Blog extends Common
     public function add()
     {
         if(request()->isPost()){
-            $Article= new Article();
-            $title=input('post.title');
-            $des=input('post.desc');
-            $type=input('post.type');
-            $content=input('post.content');
-            $Article= new Article();
-            $Article->title=$title;
-            $Article->desc=$des;
-            $Article->type=$type;
-            $Article->content=$content;
-            $res=$Article->save();
+            $data=[
+                'title'=>input('post.title','','trim'),
+                'desc'=>input('post.desc','','trim'),
+                'class_id'=>input('post.class_id',0,'intval'),
+                'content'=>input('post.content'),
+            ];
+            $res=Article::create($data);
             if($res){
-                $this->success('添加成功',url('/admin/blog'));
+                $this->success('添加成功');
             }else{
                 $this->error('添加失败');
-                $msg=['code'=>0,'msg'=>'添加失败'];
             }
-            return $msg;
         }else{
             $class_list=db('article_class')->column('id,class_name');
             $this->assign('class_list',$class_list);
