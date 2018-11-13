@@ -1,57 +1,61 @@
 {extend name="base/base" /}
 {block name="main"}
-<div class="layui-container fly-marginTop">
-    <div class="fly-panel" pad20 style="padding-top: 5px;">
-        <div class="layui-form layui-form-pane">
-            <div class="layui-tab layui-tab-brief" lay-filter="user">
-                <ul class="layui-tab-title">
-                    <li class="layui-this">发表文章<!-- 编辑帖子 --></li>
-                </ul>
-                <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
-                    <div class="layui-tab-item layui-show">
-                        <form action="{:url('/admin/addBlog')}" method="post" id="form">
-                            <div class="layui-row layui-col-space15 layui-form-item">
-                                <div class="layui-col-md3">
-                                    <label class="layui-form-label">所在专栏</label>
-                                    <div class="layui-input-block">
-                                        {form:select name="class_id" list="$class_list" value="$data['class_id']"}
-                                    </div>
-                                </div>
-                                <div class="layui-col-md9">
-                                    <label for="L_title" class="layui-form-label">标题</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-col-space15 layui-form-item">
-                                <div class="layui-col-md12">
-                                    <label for="L_title" class="layui-form-label">简介</label>
-                                    <div class="layui-input-block">
-                                        <input type="text" id="desc" name="desc" autocomplete="off" lay-verify="required" class="layui-input">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-form-item layui-form-text">
-                                <div class="layui-input-block">
-                                    <textarea id="L_content" name="content"  placeholder="详细描述" lay-verify="content" class="layui-textarea fly-editor" style="height: 260px;" ></textarea>
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <button class="layui-btn" lay-submit lay-filter="*" >立即发布</button>
-                            </div>
-                        </form>
-                    </div>
+<div style="margin: 5px 10px">
+    <form action="{:url('/admin/addBlog')}" class="layui-form layui-form-pane" method="post" id="form">
+        <div class="layui-row layui-col-space15 layui-form-item">
+            <div class="layui-col-md3">
+                <label class="layui-form-label">所在专栏</label>
+                <div class="layui-input-block">
+                    {form:select name="class_id" list="$class_list" value="$data['class_id']"}
+                </div>
+            </div>
+            <div class="layui-col-md3">
+                <label for="L_title" class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
-    </div>
+        <div class="layui-row layui-col-space15 layui-form-item">
+            <div class="layui-col-md6">
+                <label for="L_title" class="layui-form-label">封面</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="uploadImg">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                    <input type="hidden" id="img" name="img" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15 layui-form-item">
+            <div class="layui-col-md6">
+                <label for="L_title" class="layui-form-label">简介</label>
+                <div class="layui-input-block">
+                    <input type="text" id="desc" name="desc" autocomplete="off" lay-verify="required" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <div class="layui-input-block">
+                <textarea id="L_content" name="content"  placeholder="详细描述" lay-verify="content" class="layui-textarea fly-editor" style="height: 260px;" ></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit lay-filter="*" >立即发布</button>
+        </div>
+    </form>
 </div>
 {/block}
 {block name="script"}
 <script>
-    layui.use(['layedit','form','jquery'], function(){
-         var layedit = layui.layedit, form = layui.form,$=layui.jquery;
+    layui.use(['layedit','form','jquery','upload'], function(){
+         var layedit = layui.layedit, form = layui.form,$=layui.jquery,upload = layui.upload;
+        layedit.set({
+            uploadImage: {
+                url: "{:url('/admin/upload/upload')}" //接口url
+                ,type: 'post' //默认post
+            }
+        });
         index=layedit.build('L_content', {
             tool: [
                 'strong' //加粗
@@ -68,10 +72,32 @@
                 ,'code' //代码
             ]
         }); //建立编辑器
+        //图片上传
+        var uploadInst = upload.render({
+            elem: '#uploadImg' //绑定元素
+            ,url: "{:url('/admin/upload/upload')}" //上传接口
+            ,accept:'images'
+            ,acceptMime:'image/*'
+            ,done: function(data){
+                var icon=5;
+                if(!data.code){
+                    icon=6;
+                }
+                layer.msg(data.msg, {icon:icon,time: 1500}, function () {   //提示的插件，可以使用alert代替
+                    if(!data.code){
+                        $('#img').val(data.data.src)
+                    }
+                });
+                //上传完毕回调
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
         //表单验证
         form.verify({
             content: function (value) {
-                value = $.trim(layedit.getText(index));
+                value = $.trim(layedit.getContent(index));
                 if (value == "") return "内容不能为空";
                 layedit.sync(index);
             }
@@ -81,13 +107,13 @@
             // console.log(data.field)
             $.post("{:url('/admin/addBlog')}",data.field,function (msg) {
                 layer.msg(msg.msg, {time: 1500}, function () {   //提示的插件，可以使用alert代替
-               if (msg.code) {
-                   setTimeout(function () {
-                       //刷新父页面
-                       parent.location.reload();
-                   }, 500);
-               }
-           });
+                    if (msg.code) {
+                       setTimeout(function () {
+                           //刷新父页面
+                           parent.location.reload();
+                       }, 500);
+                    }
+                });
             },'json');
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });

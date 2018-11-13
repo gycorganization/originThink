@@ -44,6 +44,7 @@ class Blog extends Common
                 'desc'=>input('post.desc','','trim'),
                 'class_id'=>input('post.class_id',0,'intval'),
                 'content'=>input('post.content'),
+                'img'=>input('post.img'),
             ];
             $res=Article::create($data);
             if($res){
