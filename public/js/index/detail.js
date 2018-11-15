@@ -11,7 +11,7 @@
     layui.code({
         elem: 'pre',
         about:false,
-        skin:'notepad' //如果要默认风格，不用设定该key。
+        // skin:'notepad' //如果要默认风格，不用设定该key。
     });
     //评论和留言的编辑器的验证
     form.verify({

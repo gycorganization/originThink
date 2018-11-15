@@ -49,6 +49,7 @@ Route::group('admin', [
     //文章管理
     'blog'=>'admin/Blog/index',
     'addBlog'=>'admin/Blog/add',
+    'deleteBlog'=>'admin/Blog/delete',
 ])->middleware(app\admin\middleware\Auth::class)->ext('html');               //使用中间件验证
 /**
  * swoole服务

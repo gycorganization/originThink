@@ -7,8 +7,12 @@ class Index extends Controller
 {
     public function index()
     {
+        //文章列表
         $list=Article::order('id desc')->limit(10)->select();
         $this->assign('list',$list);
+        //热文
+        $hotlist=Article::order('views desc')->limit(8)->field('id,title')->select();
+        $this->assign('hotlist',$hotlist);
         return $this->fetch();
     }
 
@@ -21,8 +25,12 @@ class Index extends Controller
         $data->save();
         $data=Article::get($article_id);
         $this->assign('data',$data);
+        //文章分类
         $class_list=db('article_class')->column('id,class_name');
         $this->assign('class_list',$class_list);
+        //相似文章
+        $similarlist=Article::where('class_id','=',$data->class_id)->where('id','neq',$article_id)->limit(8)->field('id,title')->select();
+        $this->assign('similarlist',$similarlist);
         return $this->fetch();
     }
 
