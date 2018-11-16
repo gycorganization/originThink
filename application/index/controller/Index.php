@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 
+use app\index\model\Comment;
 use think\Controller;
 use app\index\model\Article;
 class Index extends Controller
@@ -31,6 +32,9 @@ class Index extends Controller
         //相似文章
         $similarlist=Article::where('class_id','=',$data->class_id)->where('id','neq',$article_id)->limit(8)->field('id,title')->select();
         $this->assign('similarlist',$similarlist);
+        //评论
+        $comment=Comment::where('article_id','=',$article_id)->select();
+        $this->assign('comment',$comment);
         return $this->fetch();
     }
 
@@ -48,6 +52,32 @@ class Index extends Controller
         $class_list=db('article_class')->column('id,class_name');
         $this->assign('class_list',$class_list);
         return $this->fetch();
+    }
+
+    public function resource()
+    {
+        return $this->fetch();
+    }
+
+    public function comment()
+    {
+       if($this->request->isPost()){
+           $article_id=$this->request->post('article_id',0,'intval');
+           $content=$this->request->post('content','','trim');
+           $username=$this->request->post('username','游客'.rand(11,99),'trim');
+           $head=$this->request->post('head','/images/timg.jpg','trim');
+           $head?:$head='/images/timg.jpg';t;
+           $data=['article_id'=>$article_id,'content'=>$content,'username'=>$username,'head'=>$head];
+           $res=Comment::create($data);
+           if($res){
+               $data['create_time']=$res->create_time;
+               $this->success('评论成功','',$data);
+           }else{
+               $this->error('评论失败');
+           }
+       }
+        $this->error('非法请求');
+        
     }
     public function index2()
     {
