@@ -26,9 +26,9 @@
             <a href="javascript:;" class="blog-user">
                 <i class="fa fa-qq"></i>
             </a>
-            <a href="javascript:;" class="blog-user layui-hide">
-                <img src="../images/Absolutely.jpg" alt="Absolutely" title="Absolutely" />
-            </a>
+            <!--<a href="javascript:;" class="blog-user layui-hide">-->
+                <!--<img src="/images/Absolutely.jpg" alt="Absolutely" title="Absolutely" />-->
+            <!--</a>-->
             <!-- 不落阁 -->
             <a class="blog-logo" href="/">原点的博客</a>
             <!-- 导航菜单 -->
@@ -88,13 +88,13 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">用户名</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input"  value="{:isset($list.user)?$list.user:''}" lay-verify="required|username">
+                                            <input type="text" name="username" id="username" placeholder="请输入" autocomplete="off" class="layui-input"  value="" lay-verify="required">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">头像</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="head" placeholder="请输入" autocomplete="off" class="layui-input"  value="" >
+                                            <input type="text" name="head" id="head" placeholder="请输入" autocomplete="off" class="layui-input"  value="" >
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -173,10 +173,10 @@
     <!--侧边导航-->
     <ul class="layui-nav layui-nav-tree layui-nav-side blog-nav-left layui-hide" lay-filter="nav">
         <li class="layui-nav-item">
-            <a href="index.html"><i class="fa fa-home fa-fw"></i>&nbsp;网站首页</a>
+            <a href="/"><i class="fa fa-home fa-fw"></i>&nbsp;网站首页</a>
         </li>
         <li class="layui-nav-item layui-this">
-            <a href="article.html"><i class="fa fa-file-text fa-fw"></i>&nbsp;文章专栏</a>
+            <a href="{:url('/index/index/article')}"><i class="fa fa-file-text fa-fw"></i>&nbsp;文章专栏</a>
         </li>
         <li class="layui-nav-item">
             <a href="resource.html"><i class="fa fa-tags fa-fw"></i>&nbsp;资源分享</a>
@@ -246,7 +246,8 @@
                     layer.close(index);
                     var html = '<li><div class="comment-parent"><img src="'+data.data.head+'"alt="absolutely"/><div class="info"><span class="username">'+data.data.username+'</span><span class="time">'+data.data.create_time+'</span></div><div class="content">' + content + '</div></div></li>';
                     $('.blog-comment').append(html);
-                    $('#remarkEditor').val('');
+                    $('#head').val('');
+                    $('#username').val('');
                     editIndex = layui.layedit.build('remarkEditor', {
                         height: 150,
                         tool: ['face', '|', 'left', 'center', 'right', '|', 'link'],

@@ -65,8 +65,8 @@ class Index extends Controller
            $article_id=$this->request->post('article_id',0,'intval');
            $content=$this->request->post('content','','trim');
            $username=$this->request->post('username','游客'.rand(11,99),'trim');
-           $head=$this->request->post('head','/images/timg.jpg','trim');
-           $head?:$head='/images/timg.jpg';t;
+           $head=$this->request->post('head','','trim');
+           $head?:$head='/images/timg.jpg';
            $data=['article_id'=>$article_id,'content'=>$content,'username'=>$username,'head'=>$head];
            $res=Comment::create($data);
            if($res){
