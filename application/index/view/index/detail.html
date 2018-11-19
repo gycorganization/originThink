@@ -15,7 +15,7 @@
     <!-- 本页样式表 -->
     <link href="/css/index/detail.css" rel="stylesheet" />
     <style>
-        img{max-width:95%}
+        .content img{max-width:95%}
     </style>
 </head>
 <body>
@@ -77,6 +77,13 @@
                         </div>
                         <div class="article-detail-content">
                             {$data.content|raw}
+                        </div>
+                    </div>
+                    <div class="article-component">
+                        <div class="component-box">
+                            <a href="javascript:;" class="praise" blog-event="praise"><i class="fa fa-thumbs-up fa-fw"></i>点赞（<span id="praiseCnt"> {$data.praise}</span>）</a>
+                            <a href="javascript:;" class="reword" blog-event="reword">赏</a>
+                            <a href="javascript:;" class="share" blog-event="share"><i class="fa fa-share-alt fa-fw"></i>分享（<span id="shareCnt">0</span>）</a>
                         </div>
                     </div>
                     <!-- 评论区域 -->
@@ -189,6 +196,12 @@
         </li>
     </ul>
     <!--分享窗体-->
+    <div class="bdsharebuttonbox " data-tag="share_1" style="display:none;">
+        <a class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+        <a class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+        <a class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+        <a class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    </div>
     <div class="blog-share layui-hide">
         <div class="blog-share-body">
             <div style="width: 200px;height:100%;">
@@ -246,6 +259,7 @@
                     layer.close(index);
                     var html = '<li><div class="comment-parent"><img src="'+data.data.head+'"alt="absolutely"/><div class="info"><span class="username">'+data.data.username+'</span><span class="time">'+data.data.create_time+'</span></div><div class="content">' + content + '</div></div></li>';
                     $('.blog-comment').append(html);
+                    $('#remarkEditor').val('');
                     $('#head').val('');
                     $('#username').val('');
                     editIndex = layui.layedit.build('remarkEditor', {
@@ -257,7 +271,76 @@
             });
             return false;
         });
+        var events = {
+            //分享
+            share: function () {
+                shareIndex = layer.open({
+                    type: 1,
+                    shade: 0.6,
+                    shadeClose: true,
+                    area: ['auto', '50px'],
+                    resize: false,
+                    skin: 'share',
+                    closeBtn: 0,
+                    anim: 1,
+                    title: false, //不显示标题
+                    content: $('.bdsharebuttonbox')
+                });
+            }
+
+            //点赞
+            , praise: function () {
+                var localdata = layui.data('blog')
+                    , article_id="{$data.id}"
+                    , self = this;
+                if (localdata['praise' + article_id]) {
+                    layer.tips('你已点过赞了，若收获颇大，可打赏作者！^_^', self, { tips: 1, time: 2000 });
+                    return;
+                }
+                $.post("{:url('/index/index/praise')}", { article_id: article_id }, function (data) {
+                    if (data.code === 1) {
+                        layui.data('blog', {
+                            key: 'praise' + article_id
+                            , value: true
+                        });
+                        //点赞+1
+                        var cnt = Number($('#praiseCnt').text()) + 1;
+                        $('#praiseCnt').text(cnt);
+                        layer.tips('Thank you ^_^', self, { tips: 1, time: 2000 });
+                    } else {
+                        layer.msg('点赞出错啦！0.0');
+                    }
+                });
+            }
+
+            //打赏
+            , reword: function () {
+                layer.tab({
+                    area: ['330px', '373px'],
+                    shade: 0.6,
+                    tab: [{
+                        title: '微信',
+                        content: '<img style="width:330px;height:330px;" src="/images/wx_reward.png" />'
+                    }, {
+                        title: '支付宝',
+                        content: '<img style="width:330px;height:330px;" src="/images/ali_reward.png" />'
+                    }]
+                });
+
+            }
+        };
+
+        $('*[blog-event]').on('click', function () {
+            var eventName = $(this).attr('blog-event');
+            events[eventName] && events[eventName].call(this);
+        });
+
+        $('*[blog-event="reword"]').on('mouseover', function () {
+            layer.tips('一元足以感动我 ^_^', this, { tips: 1, time: 2000 });
+        });
+
     });
+
 </script>
 </body>
 </html>

@@ -19,17 +19,17 @@ layui.use(['element', 'layer', 'util', 'form'], function () {
     });
     //分享工具
     layui.util.fixbar({
-        bar1: '&#xe641;',
-        click: function (type) {
-            if (type === 'bar1') {
-                var sear = new RegExp('layui-hide');
-                if (sear.test($('.blog-share').attr('class'))) {
-                    shareIn();
-                } else {
-                    shareOut();
-                }
-            }
-        }
+        // bar1: '&#xe641;',
+        // click: function (type) {
+        //     if (type === 'bar1') {
+        //         var sear = new RegExp('layui-hide');
+        //         if (sear.test($('.blog-share').attr('class'))) {
+        //             shareIn();
+        //         } else {
+        //             shareOut();
+        //         }
+        //     }
+        // }
     });
 
     //子栏目导航点击事件

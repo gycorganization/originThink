@@ -71,13 +71,27 @@ class Index extends Controller
            $res=Comment::create($data);
            if($res){
                $data['create_time']=$res->create_time;
+               Article::update(['comments'=>['inc', 1]],['id'=>$article_id]);
                $this->success('评论成功','',$data);
            }else{
                $this->error('评论失败');
            }
        }
         $this->error('非法请求');
-        
+    }
+
+    public function praise()
+    {
+        if($this->request->isPost()){
+            $article_id=$this->request->post('article_id',0,'intval');
+            $res=Article::update(['praise'=>['inc', 1]],['id'=>$article_id]);
+            if($res){
+                $this->success('点赞成功');
+            }else{
+                $this->error('点赞失败');
+            }
+        }
+        $this->error('非法请求');
     }
     public function index2()
     {
