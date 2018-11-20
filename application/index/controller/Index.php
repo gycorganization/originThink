@@ -36,7 +36,7 @@ class Index extends Controller
     public function detail()
     {
         $article_id=$this->request->param('id',0,'intval');
-        if(!$article_id) alert_error('参数错误');
+        if(!$article_id) alert_error('参数错误','javascript:history.back(-1);');
         $data=Article::get($article_id);
         if(!$data){
             alert_error('文章走丢了,看看其他文章吧','javascript:history.back(-1);');
