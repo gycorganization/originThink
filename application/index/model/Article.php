@@ -10,4 +10,9 @@ use think\Model;
 class Article extends Model
 {
     protected $autoWriteTimestamp = true;
+
+    public function getClass()
+    {
+        return $this->hasOne('ArticleClass','id','class_id');
+    }
 }

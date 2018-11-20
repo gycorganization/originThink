@@ -1,11 +1,20 @@
 <?php
 namespace app\index\controller;
 
+use app\index\model\ArticleClass;
 use app\index\model\Comment;
 use think\Controller;
 use app\index\model\Article;
+
 class Index extends Controller
 {
+    /**
+     * 文章首页
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function index()
     {
         //文章列表
@@ -26,15 +35,18 @@ class Index extends Controller
      */
     public function detail()
     {
-        $article_id=input('id',0,'intval');
+        $article_id=$this->request->get('id',0,'intval');
         if(!$article_id) return $this->error('参数错误');
         $data=Article::get($article_id);
+        if(!$data){
+            alert_error('文章走丢了,看看其他文章吧','javascript:history.back(-1);');
+        }
         $data->views=['inc', 1];
         $data->save();
         $data=Article::get($article_id);
         $this->assign('data',$data);
         //文章分类
-        $class_list=db('article_class')->column('id,class_name');
+        $class_list= ArticleClass::column('id,class_name');
         $this->assign('class_list',$class_list);
         //相似文章
         $similarlist=Article::where('class_id','=',$data->class_id)->where('id','neq',$article_id)->limit(8)->field('id,title')->select();
@@ -52,8 +64,8 @@ class Index extends Controller
      */
     public function article()
     {
-        $keywords=input('keywords','','trim');
-        $class_id=input('class_id',0,'intval');
+        $keywords=$this->request->get('keywords','','trim');
+        $class_id=$this->request->get('class_id',0,'intval');
         $where=[];
         empty($keywords) || $where[]=['title','like','%'.$keywords.'%'];
         empty($class_id) || $where[]=['class_id','=',$class_id];
@@ -132,25 +144,5 @@ class Index extends Controller
             }
         }
         $this->error('非法请求');
-    }
-    public function index2()
-    {
-        Task::async(function ($serv, $task_id, $data) {
-            $i = 0;
-            while ($i < 10) {
-                $i++;
-                echo $i;
-                sleep(1);
-            }
-        });
-        $timeid=Timer::tick(1000,function(){
-            var_dump(1);
-        });
-        return $timeid;
-    }
-
-    public function test($timeid)
-    {
-        Timer::clear($timeid);
     }
 }
