@@ -40,13 +40,13 @@
                     <a href="{:url('/index/index/article')}"><i class="fa fa-file-text fa-fw"></i>&nbsp;文章专栏</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="resource.html"><i class="fa fa-tags fa-fw"></i>&nbsp;资源分享</a>
+                    <a href="{:url('/index/index/resource')}"><i class="fa fa-tags fa-fw"></i>&nbsp;资源分享</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="timeline.html"><i class="fa fa-hourglass-half fa-fw"></i>&nbsp;点点滴滴</a>
+                    <a href="{:url('/index/index/timeline')}"><i class="fa fa-hourglass-half fa-fw"></i>&nbsp;点点滴滴</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="about.html"><i class="fa fa-info fa-fw"></i>&nbsp;关于本站</a>
+                    <a href="{:url('/index/index/about')}"><i class="fa fa-info fa-fw"></i>&nbsp;关于本站</a>
                 </li>
             </ul>
             <!-- 手机和平板的导航开关 -->
@@ -59,8 +59,8 @@
     <div class="blog-body">
         <div class="blog-container">
             <blockquote class="layui-elem-quote sitemap layui-breadcrumb shadow">
-                <a href="index.html" title="网站首页">网站首页</a>
-                <a href="article.html" title="文章专栏">文章专栏</a>
+                <a href="/" title="网站首页">网站首页</a>
+                <a href="{:url('/index/index/article')}" title="文章专栏">文章专栏</a>
                 <a><cite>{$data.title}</cite></a>
             </blockquote>
             <div class="blog-main">
@@ -81,9 +81,9 @@
                     </div>
                     <div class="article-component">
                         <div class="component-box">
-                            <a href="javascript:;" class="praise" blog-event="praise"><i class="fa fa-thumbs-up fa-fw"></i>点赞（<span id="praiseCnt"> {$data.praise}</span>）</a>
+                            <a href="javascript:;" class="praise" blog-event="praise"><i class="fa fa-thumbs-up fa-fw"></i>点赞(<span id="praiseCnt">{$data.praise}</span>)</a>
                             <a href="javascript:;" class="reword" blog-event="reword">赏</a>
-                            <a href="javascript:;" class="share" blog-event="share"><i class="fa fa-share-alt fa-fw"></i>分享（<span id="shareCnt">0</span>）</a>
+                            <a href="javascript:;" class="share" blog-event="share"><i class="fa fa-share-alt fa-fw"></i>分享</a>
                         </div>
                     </div>
                     <!-- 评论区域 -->
@@ -95,13 +95,13 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">用户名</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="username" id="username" placeholder="请输入" autocomplete="off" class="layui-input"  value="" lay-verify="required">
+                                            <input type="text" name="username" id="username" placeholder="评论总得留个名字吧" autocomplete="off" class="layui-input"  value="" lay-verify="required">
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">头像</label>
                                         <div class="layui-input-block">
-                                            <input type="text" name="head" id="head" placeholder="请输入" autocomplete="off" class="layui-input"  value="" >
+                                            <input type="text" name="head" id="head" placeholder="给自己来个帅气的头像" autocomplete="off" class="layui-input"  value="" >
                                         </div>
                                     </div>
                                     <div class="layui-form-item">

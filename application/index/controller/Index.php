@@ -17,6 +17,13 @@ class Index extends Controller
         return $this->fetch();
     }
 
+    /**
+     * 文章详情页
+     * @return mixed|void
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function detail()
     {
         $article_id=input('id',0,'intval');
@@ -33,11 +40,16 @@ class Index extends Controller
         $similarlist=Article::where('class_id','=',$data->class_id)->where('id','neq',$article_id)->limit(8)->field('id,title')->select();
         $this->assign('similarlist',$similarlist);
         //评论
-        $comment=Comment::where('article_id','=',$article_id)->select();
+        $comment=Comment::where('article_id','=',$article_id)->order('create_time desc')->select();
         $this->assign('comment',$comment);
         return $this->fetch();
     }
 
+    /**
+     * 文章列表
+     * @return mixed
+     * @throws \think\exception\DbException
+     */
     public function article()
     {
         $keywords=input('keywords','','trim');
@@ -54,11 +66,36 @@ class Index extends Controller
         return $this->fetch();
     }
 
+    /**
+     * 资源分享
+     * @return mixed
+     */
     public function resource()
     {
         return $this->fetch();
     }
 
+    /**
+     * 关于本站
+     * @return mixed
+     */
+    public function about()
+    {
+        return $this->fetch();
+    }
+
+    /**
+     * 点点滴滴
+     * @return mixed
+     */
+    public function timeline()
+    {
+        return $this->fetch();
+    }
+
+    /**
+     * 评论
+     */
     public function comment()
     {
        if($this->request->isPost()){
@@ -80,6 +117,9 @@ class Index extends Controller
         $this->error('非法请求');
     }
 
+    /**
+     * 点赞
+     */
     public function praise()
     {
         if($this->request->isPost()){
