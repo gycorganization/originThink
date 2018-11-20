@@ -35,8 +35,8 @@ class Index extends Controller
      */
     public function detail()
     {
-        $article_id=$this->request->get('id',0,'intval');
-        if(!$article_id) return $this->error('参数错误');
+        $article_id=$this->request->param('id',0,'intval');
+        if(!$article_id) alert_error('参数错误');
         $data=Article::get($article_id);
         if(!$data){
             alert_error('文章走丢了,看看其他文章吧','javascript:history.back(-1);');
@@ -64,8 +64,8 @@ class Index extends Controller
      */
     public function article()
     {
-        $keywords=$this->request->get('keywords','','trim');
-        $class_id=$this->request->get('class_id',0,'intval');
+        $keywords=$this->request->param('keywords','','trim');
+        $class_id=$this->request->param('class_id',0,'intval');
         $where=[];
         empty($keywords) || $where[]=['title','like','%'.$keywords.'%'];
         empty($class_id) || $where[]=['class_id','=',$class_id];
