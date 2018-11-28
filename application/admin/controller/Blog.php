@@ -16,27 +16,23 @@ class Blog extends Common
     /**
      * 文章列表
      * @return array|mixed
+     * @throws \think\exception\DbException
      */
     public function index()
     {
-        $list=[];
-        if(request()->isAjax()){
-            $data=input();
-            $map=[];
-            if(isset($data['starttime']) && isset($data['endtime'])){
-                if($data['starttime'] && $data['endtime']){
-                    $map[]=['create_time', 'between time', [$data['starttime'], $data['endtime']]];
-                }
-            }
-            empty($data['title']) || $map[]=['title','like','%'.$data['title'].'%'];
-            isset($data['limit'])?$limit=$data['limit'] : $limit=10;
-            $list=Article::where($map)->withAttr('create_time', function($value, $data) {
-                return date('Y-m-d H:i:s',$value);
-            })->fetchSql(false)->paginate($limit,false,['query'=>$data]);
-            $data=$list->toarray();
-            return (['code'=>0,'mag'=>'','data'=>$data['data'],'count'=>$data['total']]);
+        if ( $this->request->isAjax() ){
+            $data = [
+                'starttime' => $this->request->get('starttime','','trim'),
+                'endtime'   => $this->request->get('endtime','','trim'),
+                'key'       => $this->request->get('key','','trim'),
+                'limit'     => $this->request->get('limit',10,'intval')
+            ];
+            $list = Article::withSearch(['name','create_time'], [
+                'name'			=>	$data['key'],
+                'create_time'	=>	[ $data['starttime'] , $data['endtime'] ],
+            ])->paginate( $data['limit'],false , ['query' => $data] );
+            return (['code' => 0,'mag' => '','data' => $list->items(),'count' => $list->total()]);
         }
-        $this->assign('list',$list);
         return $this->fetch();
     }
 
@@ -50,37 +46,37 @@ class Blog extends Common
      */
     public function add()
     {
-        if(request()->isPost()){
+        if ( $this->request->isPost() ) {
             $data=[
-                'title'=>input('post.title','','trim'),
-                'desc'=>input('post.desc','','trim'),
-                'class_id'=>input('post.class_id',0,'intval'),
-                'content'=>input('post.content'),
-                'img'=>input('post.img'),
+                'title'    => $this->request->post('title','','trim'),
+                'desc'     => $this->request->post('desc','','trim'),
+                'class_id' => $this->request->post('class_id',0,'intval'),
+                'content'  => $this->request->post('content'),
+                'img'      => $this->request->post('img'),
             ];
             $id=$this->request->post('id',0,'intval');
-            if($id){//编辑文章
-                $res=Article::update($data,['id'=>$id]);
-                if($res){
+            if ( $id ){//编辑文章
+                $res = Article::update($data,['id'=>$id]);
+                if ( $res ){
                     $this->success('编辑成功');
-                }else{
+                } else {
                     $this->error('编辑失败');
                 }
-            }else{//添加文章
-                $res=Article::create($data);
-                if($res){
+            } else {//添加文章
+                $res = Article::create($data);
+                if ($res) {
                     $this->success('添加成功');
-                }else{
+                } else {
                     $this->error('添加失败');
                 }
             }
 
-        }else{
-            $class_list=db('article_class')->column('id,class_name');
+        } else {
+            $class_list = Article::column('id,class_name');
             $this->assign('class_list',$class_list);
-            $id=$this->request->get('id',0,'intval');
-            if($id){
-                $data=Article::where('id','=',$id)->find();
+            $id = $this->request->get('id',0,'intval');
+            if ( $id ) {
+                $data = Article::where('id','=',$id)->find();
                 $this->assign('data',$data);
             }
             return $this->fetch();
@@ -93,19 +89,19 @@ class Blog extends Common
      */
     public function delete()
     {
-        if(request()->isPost()){
-            $id=$this->request->post('id',0,'intval');
-            if($id){
-                $res=Article::destroy($id);
-                if($res){
+        if ( $this->request->isPost() ){
+            $id = $this->request->post('id',0,'intval');
+            if ( $id ){
+                $res = Article::destroy($id);
+                if ( $res ){
                     $this->success('删除成功');
-                }else{
+                } else {
                     $this->error('删除失败');
                 }
-            }else{
+            } else {
                 $this->error('参数错误');
             }
-        }else{
+        } else {
             $this->error('非法请求');
         }
     }
